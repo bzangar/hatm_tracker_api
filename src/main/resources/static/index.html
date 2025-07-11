@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+<h1>Find User by id </h1>
+<form>
+    <input type="number" id = "enteredId" placeholder="Enter user id">
+    <p id="userId"> </p>
+    <p id="userName"> </p>
+    <p id="userUserName"> </p>
+    <button onclick ="getUserName(event)">Find</button>
+</form>
+
+<hr>
+<br>
+<br>
+<h1>Create a user </h1>
+<form>
+    <input type="text" id="enteredName" placeholder="Your name"> <br>  <br>
+    <input type="text" id="enteredUserName" placeholder="login"> <br>  <br>
+    <input type="password" id="enteredPassword" placeholder="password"><br>  <br>
+    <button onclick ="createUser(event)">Create</button>
+</form>
+
+<p id="createdUser"> _</p>
+<p id="createdUserId"> _</p>
+<p id="createdUserName"> _</p>
+<p id="createdUserLogin"> _</p>
+
+
+<script>
+  function getUserName(event){
+  event.preventDefault();
+  const enteredUserid = document.getElementById('enteredId').value;
+
+  fetch(`http://localhost:8080/api/hatm/users/get/${enteredUserid}`)
+  .then(response => response.json())
+  .then(data => {
+  document.getElementById('userId').textContent = 'User id: ' + data.id;
+  document.getElementById('userName').textContent = 'User name: ' + data.name;
+  document.getElementById('userUserName').textContent = 'User userName: ' + data.username;
+  })
+  .catch(error => {
+                    console.error("Error fetching user:", error);
+                    document.getElementById('userId').textContent = "Error loading user data.";
+                    document.getElementById('userName').textContent = "Error loading user data.";
+                    document.getElementById('userUserName').textContent = "Error loading user data.";
+                });
+  }
+
+  function createUser(event){
+  event.preventDefault();
+  const name = document.getElementById('enteredName').value;
+  const username = document.getElementById('enteredUserName').value;
+  const password = document.getElementById('enteredPassword').value;
+
+  if (!name || !username || !password) {
+      alert("Please fill out all fields.");
+      return;
+  }
+
+
+  fetch(`http://localhost:8080/api/hatm/users/create`, {
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ name: name, username: username, password: password })
+      })
+    .then(response => response.json())
+    .then( data => {
+        document.getElementById('createdUser').textContent = 'User created!';
+        document.getElementById('createdUserId').textContent = 'User id: ' + data.id;
+        document.getElementById('createdUserName').textContent = 'User name: ' + data.name;
+        document.getElementById('createdUserLogin').textContent = 'User userName: ' + data.username;
+
+        document.getElementById('enteredName').value = '';
+        document.getElementById('enteredUserName').value = '';
+        document.getElementById('enteredPassword').value = '';
+    })
+    .catch(error => {
+          console.error("Error creating user:", error);
+          document.getElementById('createdUser').textContent = 'Failed to create user.';
+    });
+  }
+</script>
+</body>
+</html>
