@@ -1,31 +1,43 @@
 package com.hatm_tracker.controller;
 
 
-import com.hatm_tracker.model.dto.UserDto;
-import com.hatm_tracker.model.entity.User;
-import com.hatm_tracker.service.UserService;
+import com.hatm_tracker.model.dto.HatmDto;
+import com.hatm_tracker.service.HatmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*")
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/hatm/users")
 @RequiredArgsConstructor
+@RequestMapping("/api/hatm-tracker/hatm")
 public class HatmController {
 
-    final private UserService userService;
+    final private HatmService hatmService;
 
     @GetMapping("/get/{id}")
-    public UserDto getUserById(
-            @PathVariable Integer id
-    ){
-        return userService.getUserById(id);
+    public HatmDto getHatmById(@PathVariable Integer id){
+        return hatmService.getHatmDtoById(id);
+    }
+
+    @GetMapping("/get/all")
+    public List<HatmDto> getAllHatm(){
+        return hatmService.getAllHatmDto();
     }
 
     @PostMapping("/create")
-    public UserDto createUser(
-            @RequestBody User user
-    ){
-        return userService.createUser(user);
+    public HatmDto createHatm(@RequestBody HatmDto hatmDto){
+        return hatmService.createHatm(hatmDto);
+    }
+
+    @PutMapping("/update/{id}")
+    public HatmDto updateHatmById(
+            @PathVariable Integer id, @RequestBody HatmDto hatmDto){
+        return hatmService.updateHatmById(id, hatmDto);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public boolean deleteHatmById(@PathVariable Integer id){
+        return hatmService.deleteHatmById(id);
     }
 }

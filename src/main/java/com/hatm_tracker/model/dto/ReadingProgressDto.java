@@ -1,21 +1,16 @@
-package com.hatm_tracker.model.entity;
+package com.hatm_tracker.model.dto;
 
-import jakarta.persistence.*;
+import com.hatm_tracker.model.entity.Hatm;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
 
-@Entity
+@Builder
 @Data
-public class ReadingProgress {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ReadingProgressDto {
     private Integer id;
-
     private LocalDate date;
     private Integer pageReadTo; // До какой страницы прочитал сегодня
-
-    @ManyToOne
-    @JoinColumn(name = "hatm_id")
     private Hatm hatm;
 }
