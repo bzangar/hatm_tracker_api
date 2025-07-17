@@ -1,4 +1,4 @@
-package com.hatm_tracker.service;
+package com.hatm_tracker.service.user_service;
 
 import com.hatm_tracker.exception.UserNotFoundException;
 import com.hatm_tracker.model.Mapper;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     final private UserRepository userRepository;
     final private Mapper mapper;

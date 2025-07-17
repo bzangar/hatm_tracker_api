@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -18,7 +19,7 @@ public class ReadingProgress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private LocalDate date;
+    private LocalDateTime dateTime;
     private Integer pageReadTo; // До какой страницы прочитал сегодня
 
     @ManyToOne

@@ -5,7 +5,7 @@ import com.hatm_tracker.model.dto.HatmDto;
 import com.hatm_tracker.model.dto.UserDto;
 import com.hatm_tracker.model.dto.UserReqDto;
 import com.hatm_tracker.model.entity.User;
-import com.hatm_tracker.service.UserService;
+import com.hatm_tracker.service.user_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

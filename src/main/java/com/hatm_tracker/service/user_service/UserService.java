@@ -1,4 +1,4 @@
-package com.hatm_tracker.service;
+package com.hatm_tracker.service.user_service;
 
 import com.hatm_tracker.model.dto.HatmDto;
 import com.hatm_tracker.model.dto.UserDto;

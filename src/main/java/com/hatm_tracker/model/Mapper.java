@@ -43,7 +43,7 @@ public class Mapper {
                 .id(readingProgress.getId())
                 .hatm(hatmFromEntityToDto(readingProgress.getHatm()))
                 .pageReadTo(readingProgress.getPageReadTo())
-                .date(readingProgress.getDate())
+                .dateTime(readingProgress.getDateTime())
                 .build();
     }
 }

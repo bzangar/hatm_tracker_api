@@ -1,15 +1,18 @@
-package com.hatm_tracker.service;
+package com.hatm_tracker.service.hatm_service;
 
 import com.hatm_tracker.exception.HatmNotFoundException;
+import com.hatm_tracker.exception.PrevousHatmIsNotEnded;
 import com.hatm_tracker.model.Mapper;
 import com.hatm_tracker.model.dto.HatmDto;
 import com.hatm_tracker.model.dto.ReadingProgressDto;
 import com.hatm_tracker.model.entity.Hatm;
 import com.hatm_tracker.repository.HatmRepository;
 import com.hatm_tracker.repository.ReadingProgressRepository;
+import com.hatm_tracker.service.user_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -25,12 +28,21 @@ public class HatmServiceImpl implements HatmService{
     @Override
     public HatmDto createHatm(HatmDto hatmDto) {
         int maxNumber = hatmRepository.countAllByOrderByHatmNumberAsc() + 1;
+        LocalDate today = LocalDate.now();
+
+        Hatm latestHatm = hatmRepository.findTopByOrderByHatmNumberDesc()
+                .orElseThrow(()-> new HatmNotFoundException("Hatm does not exists!!"));
+        System.out.println("Previous Hatm ID: " + latestHatm.getId());
+
+        if(!latestHatm.isEnd()){
+            throw new PrevousHatmIsNotEnded("Prevous Hatm Is Not Ended");
+        }
 
         Hatm hatm = Hatm.builder()
                 .hatmNumber(maxNumber)
                 .name(hatmDto.getName())
-                .startTime(hatmDto.getStartTime())
-                .endTime(hatmDto.getEndTime())
+                .startTime(today)
+                .endTime(null)
                 .user(userService.getUserById(hatmDto.getUser().getId()))
                 .build();
         hatmRepository.save(hatm);

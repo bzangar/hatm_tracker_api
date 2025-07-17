@@ -3,7 +3,7 @@ package com.hatm_tracker.controller;
 
 import com.hatm_tracker.model.dto.HatmDto;
 import com.hatm_tracker.model.dto.ReadingProgressDto;
-import com.hatm_tracker.service.HatmService;
+import com.hatm_tracker.service.hatm_service.HatmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

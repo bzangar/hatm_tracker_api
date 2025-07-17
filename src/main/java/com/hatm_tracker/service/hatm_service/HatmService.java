@@ -1,9 +1,8 @@
-package com.hatm_tracker.service;
+package com.hatm_tracker.service.hatm_service;
 
 import com.hatm_tracker.model.dto.HatmDto;
 import com.hatm_tracker.model.dto.ReadingProgressDto;
 import com.hatm_tracker.model.entity.Hatm;
-import org.hibernate.dialect.H2SqlAstTranslator;
 
 import java.util.List;
 
