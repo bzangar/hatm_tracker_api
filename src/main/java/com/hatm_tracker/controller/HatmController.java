@@ -2,6 +2,7 @@ package com.hatm_tracker.controller;
 
 
 import com.hatm_tracker.model.dto.HatmDto;
+import com.hatm_tracker.model.dto.ReadingProgressDto;
 import com.hatm_tracker.service.HatmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +40,10 @@ public class HatmController {
     @DeleteMapping("/delete/{id}")
     public boolean deleteHatmById(@PathVariable Integer id){
         return hatmService.deleteHatmById(id);
+    }
+
+    @GetMapping("/get/all-reading-progresses/{id}")
+    public List<ReadingProgressDto> getAllReadingProgresses(@PathVariable Integer id){
+        return hatmService.getAllReadingProgressById(id);
     }
 }

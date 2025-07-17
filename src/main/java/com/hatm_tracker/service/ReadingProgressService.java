@@ -1,6 +1,5 @@
 package com.hatm_tracker.service;
 
-import com.hatm_tracker.model.dto.HatmDto;
 import com.hatm_tracker.model.dto.ReadingProgressDto;
 
 import java.util.List;
@@ -12,7 +11,7 @@ public interface ReadingProgressService {
 
     ReadingProgressDto getReadingProgressDtoById(Integer id);
 
-    ReadingProgressDto updateReadingProgressById(Integer id);
+    ReadingProgressDto updateReadingProgressById(Integer id, ReadingProgressDto readingProgressDto);
 
-    boolean deleteHatmById(Integer id);
+    boolean deleteReadingProgressById(Integer id);
 }

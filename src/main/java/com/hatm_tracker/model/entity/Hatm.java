@@ -23,6 +23,7 @@ public class Hatm {
     private Integer hatmNumber; // номер хатыма
     private LocalDate startTime;
     private LocalDate endTime;
+    private boolean isEnd;
 
     @JoinColumn(name = "user_id")
     @ManyToOne

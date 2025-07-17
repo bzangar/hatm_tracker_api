@@ -3,8 +3,10 @@ package com.hatm_tracker.service;
 import com.hatm_tracker.exception.HatmNotFoundException;
 import com.hatm_tracker.model.Mapper;
 import com.hatm_tracker.model.dto.HatmDto;
+import com.hatm_tracker.model.dto.ReadingProgressDto;
 import com.hatm_tracker.model.entity.Hatm;
 import com.hatm_tracker.repository.HatmRepository;
+import com.hatm_tracker.repository.ReadingProgressRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ public class HatmServiceImpl implements HatmService{
     final private Mapper mapper;
     final private HatmRepository hatmRepository;
     final private UserService userService;
+    final private ReadingProgressRepository readingProgressRepository;
 
     @Override
     public HatmDto createHatm(HatmDto hatmDto) {
@@ -81,5 +84,19 @@ public class HatmServiceImpl implements HatmService{
         }
         hatmRepository.saveAll(hatmsToUpdate);
         return true;
+    }
+
+    @Override
+    public Hatm getHatmById(Integer id) {
+        return hatmRepository.findById(id)
+                .orElseThrow(()-> new HatmNotFoundException("Hatm doesn't exits!!"));
+    }
+
+    @Override
+    public List<ReadingProgressDto> getAllReadingProgressById(Integer id) {
+        return readingProgressRepository.findAllByHatmId(id)
+                .stream()
+                .map(rp->mapper.readingProgressFromEntityToDto(rp))
+                .toList();
     }
 }

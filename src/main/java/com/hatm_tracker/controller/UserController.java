@@ -1,6 +1,7 @@
 package com.hatm_tracker.controller;
 
 
+import com.hatm_tracker.model.dto.HatmDto;
 import com.hatm_tracker.model.dto.UserDto;
 import com.hatm_tracker.model.dto.UserReqDto;
 import com.hatm_tracker.model.entity.User;
@@ -32,7 +33,7 @@ public class UserController {
         return userService.createUser(user);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/get/all")
     public List<UserDto> getAllUserDto(){
         return userService.getAllUserDto();
     }
@@ -47,5 +48,10 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     public boolean deleteUserById(@PathVariable Integer id){
         return userService.deleteUserById(id);
+    }
+
+    @GetMapping("/get/all-hatms/{id}")
+    public List<HatmDto> getAllHatmDtoById(@PathVariable Integer id){
+        return userService.getAllHatmDtoById(id);
     }
 }

@@ -1,5 +1,6 @@
 package com.hatm_tracker.service;
 
+import com.hatm_tracker.model.dto.HatmDto;
 import com.hatm_tracker.model.dto.UserDto;
 import com.hatm_tracker.model.dto.UserReqDto;
 import com.hatm_tracker.model.entity.User;
@@ -18,4 +19,6 @@ public interface UserService {
     UserReqDto updateUserById(Integer id, UserReqDto userResDto);
 
     User getUserById(Integer id);
+
+    List<HatmDto> getAllHatmDtoById(Integer id);
 }

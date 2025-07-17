@@ -12,5 +12,5 @@ public class ReadingProgressDto {
     private Integer id;
     private LocalDate date;
     private Integer pageReadTo; // До какой страницы прочитал сегодня
-    private Hatm hatm;
+    private HatmDto hatm;
 }

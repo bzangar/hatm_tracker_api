@@ -9,4 +9,6 @@ public interface HatmRepository extends JpaRepository<Hatm, Integer> {
     int countAllByOrderByHatmNumberAsc();
 
     List<Hatm> findByHatmNumberGreaterThanOrderByHatmNumberAsc(Integer deletedHatmNumber);
+
+    List<Hatm> findAllByUserId(Integer id);
 }
