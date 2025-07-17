@@ -1,6 +1,7 @@
 package com.hatm_tracker.repository;
 
 import com.hatm_tracker.model.entity.Hatm;
+import com.hatm_tracker.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,5 +14,5 @@ public interface HatmRepository extends JpaRepository<Hatm, Integer> {
 
     List<Hatm> findAllByUserId(Integer id);
 
-    Optional<Hatm> findTopByOrderByHatmNumberDesc();
+    Optional<Hatm> findTopByUserOrderByHatmNumberDesc(User user);
 }

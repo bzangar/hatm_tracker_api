@@ -29,13 +29,14 @@ public class HatmServiceImpl implements HatmService{
     public HatmDto createHatm(HatmDto hatmDto) {
         int maxNumber = hatmRepository.countAllByOrderByHatmNumberAsc() + 1;
         LocalDate today = LocalDate.now();
+        if(!getAllHatmDtoByUserId(hatmDto.getUser().getId()).isEmpty()){
+            Hatm latestHatm = hatmRepository.findTopByUserOrderByHatmNumberDesc(userService.getUserById(hatmDto.getUser().getId()))
+                    .orElseThrow(()-> new HatmNotFoundException("Hatm does not exists!!"));
+            System.out.println("Previous Hatm ID: " + latestHatm.getId());
 
-        Hatm latestHatm = hatmRepository.findTopByOrderByHatmNumberDesc()
-                .orElseThrow(()-> new HatmNotFoundException("Hatm does not exists!!"));
-        System.out.println("Previous Hatm ID: " + latestHatm.getId());
-
-        if(!latestHatm.isEnd()){
-            throw new PrevousHatmIsNotEnded("Prevous Hatm Is Not Ended");
+            if(!latestHatm.isEnd()){
+                throw new PrevousHatmIsNotEnded("Prevous Hatm Is Not Ended");
+            }
         }
 
         Hatm hatm = Hatm.builder()
@@ -109,6 +110,14 @@ public class HatmServiceImpl implements HatmService{
         return readingProgressRepository.findAllByHatmId(id)
                 .stream()
                 .map(rp->mapper.readingProgressFromEntityToDto(rp))
+                .toList();
+    }
+
+    @Override
+    public List<HatmDto> getAllHatmDtoByUserId(Integer id) {
+        return hatmRepository.findAllByUserId(id)
+                .stream()
+                .map(hatm-> mapper.hatmFromEntityToDto(hatm))
                 .toList();
     }
 }

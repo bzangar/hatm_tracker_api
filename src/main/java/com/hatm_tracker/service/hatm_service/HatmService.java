@@ -12,6 +12,8 @@ public interface HatmService {
 
     List<HatmDto> getAllHatmDto();
 
+    List<HatmDto> getAllHatmDtoByUserId(Integer id);
+
     HatmDto getHatmDtoById(Integer id);
 
     HatmDto updateHatmById(Integer id, HatmDto hatmDto);
