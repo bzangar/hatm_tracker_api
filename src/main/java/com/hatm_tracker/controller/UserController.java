@@ -19,38 +19,38 @@ public class UserController {
 
     final private UserService userService;
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public UserDto getUserById(
             @PathVariable Integer id
     ){
         return userService.getUserDtoById(id);
     }
 
-    @PostMapping("/create")
+    @GetMapping()
+    public List<UserDto> getAllUserDto(){
+        return userService.getAllUserDto();
+    }
+
+    @PostMapping()
     public UserDto createUser(
             @RequestBody User user
     ){
         return userService.createUser(user);
     }
 
-    @GetMapping("/get/all")
-    public List<UserDto> getAllUserDto(){
-        return userService.getAllUserDto();
-    }
-
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public UserReqDto deleteUserById(
             @PathVariable Integer id, @RequestBody UserReqDto userReqDto
             ){
         return userService.updateUserById(id, userReqDto);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public boolean deleteUserById(@PathVariable Integer id){
         return userService.deleteUserById(id);
     }
 
-    @GetMapping("/get/all-hatms/{id}")
+    @GetMapping("/{id}/all-hatms")
     public List<HatmDto> getAllHatmDtoById(@PathVariable Integer id){
         return userService.getAllHatmDtoById(id);
     }

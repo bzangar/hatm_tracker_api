@@ -9,34 +9,34 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/reading-progress")
+@RequestMapping("/api/hatm-tracker/reading-progress")
 @RequiredArgsConstructor
 public class ReadingProgressController {
 
     final private ReadingProgressService readingProgressService;
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ReadingProgressDto getReadingProgressById(@PathVariable Integer id){
         return readingProgressService.getReadingProgressDtoById(id);
     }
 
-    @GetMapping("/get/all")
+    @GetMapping()
     public List<ReadingProgressDto> getAllReadingProgress(){
         return readingProgressService.getAllReadingProgressDto();
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public ReadingProgressDto createReadingProgress(@RequestBody ReadingProgressDto readingProgressDto){
         return readingProgressService.createHatmReadingProgress(readingProgressDto);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ReadingProgressDto updateReadingProgressById(
             @PathVariable Integer id, @RequestBody ReadingProgressDto readingProgressDto){
         return readingProgressService.updateReadingProgressById(id, readingProgressDto);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public boolean deleteReadingProgressyId(@PathVariable Integer id){
         return readingProgressService.deleteReadingProgressById(id);
     }

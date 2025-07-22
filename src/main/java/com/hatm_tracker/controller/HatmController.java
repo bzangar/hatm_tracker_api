@@ -11,38 +11,38 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/hatm-tracker/hatm")
+@RequestMapping("/api/hatm-tracker/hatms")
 public class HatmController {
 
     final private HatmService hatmService;
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public HatmDto getHatmById(@PathVariable Integer id){
         return hatmService.getHatmDtoById(id);
     }
 
-    @GetMapping("/get/all")
+    @GetMapping()
     public List<HatmDto> getAllHatm(){
         return hatmService.getAllHatmDto();
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public HatmDto createHatm(@RequestBody HatmDto hatmDto){
         return hatmService.createHatm(hatmDto);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public HatmDto updateHatmById(
             @PathVariable Integer id, @RequestBody HatmDto hatmDto){
         return hatmService.updateHatmById(id, hatmDto);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     public boolean deleteHatmById(@PathVariable Integer id){
         return hatmService.deleteHatmById(id);
     }
 
-    @GetMapping("/get/all-reading-progresses/{id}")
+    @GetMapping("/{id}/all-reading-progresses")
     public List<ReadingProgressDto> getAllReadingProgresses(@PathVariable Integer id){
         return hatmService.getAllReadingProgressById(id);
     }
