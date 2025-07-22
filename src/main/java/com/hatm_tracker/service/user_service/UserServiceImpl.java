@@ -1,10 +1,12 @@
-package com.hatm_tracker.service;
+package com.hatm_tracker.service.user_service;
 
 import com.hatm_tracker.exception.UserNotFoundException;
 import com.hatm_tracker.model.Mapper;
+import com.hatm_tracker.model.dto.HatmDto;
 import com.hatm_tracker.model.dto.UserDto;
 import com.hatm_tracker.model.dto.UserReqDto;
 import com.hatm_tracker.model.entity.User;
+import com.hatm_tracker.repository.HatmRepository;
 import com.hatm_tracker.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     final private UserRepository userRepository;
     final private Mapper mapper;
+    final private HatmRepository hatmRepository;
 
 
     @Override
@@ -73,5 +76,13 @@ public class UserServiceImpl implements UserService{
     public User getUserById(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(()-> new UserNotFoundException("User doesn't exists"));
+    }
+
+    @Override
+    public List<HatmDto> getAllHatmDtoById(Integer id) {
+        return hatmRepository.findAllByUserId(id)
+                .stream()
+                .map(hatm-> mapper.hatmFromEntityToDto(hatm))
+                .toList();
     }
 }

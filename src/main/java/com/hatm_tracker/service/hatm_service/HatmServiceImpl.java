@@ -1,13 +1,18 @@
-package com.hatm_tracker.service;
+package com.hatm_tracker.service.hatm_service;
 
 import com.hatm_tracker.exception.HatmNotFoundException;
+import com.hatm_tracker.exception.PrevousHatmIsNotEnded;
 import com.hatm_tracker.model.Mapper;
 import com.hatm_tracker.model.dto.HatmDto;
+import com.hatm_tracker.model.dto.ReadingProgressDto;
 import com.hatm_tracker.model.entity.Hatm;
 import com.hatm_tracker.repository.HatmRepository;
+import com.hatm_tracker.repository.ReadingProgressRepository;
+import com.hatm_tracker.service.user_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -18,16 +23,27 @@ public class HatmServiceImpl implements HatmService{
     final private Mapper mapper;
     final private HatmRepository hatmRepository;
     final private UserService userService;
+    final private ReadingProgressRepository readingProgressRepository;
 
     @Override
     public HatmDto createHatm(HatmDto hatmDto) {
         int maxNumber = hatmRepository.countAllByOrderByHatmNumberAsc() + 1;
+        LocalDate today = LocalDate.now();
+        if(!getAllHatmDtoByUserId(hatmDto.getUser().getId()).isEmpty()){
+            Hatm latestHatm = hatmRepository.findTopByUserOrderByHatmNumberDesc(userService.getUserById(hatmDto.getUser().getId()))
+                    .orElseThrow(()-> new HatmNotFoundException("Hatm does not exists!!"));
+            System.out.println("Previous Hatm ID: " + latestHatm.getId());
+
+            if(!latestHatm.isEnd()){
+                throw new PrevousHatmIsNotEnded("Prevous Hatm Is Not Ended");
+            }
+        }
 
         Hatm hatm = Hatm.builder()
                 .hatmNumber(maxNumber)
                 .name(hatmDto.getName())
-                .startTime(hatmDto.getStartTime())
-                .endTime(hatmDto.getEndTime())
+                .startTime(today)
+                .endTime(null)
                 .user(userService.getUserById(hatmDto.getUser().getId()))
                 .build();
         hatmRepository.save(hatm);
@@ -81,5 +97,27 @@ public class HatmServiceImpl implements HatmService{
         }
         hatmRepository.saveAll(hatmsToUpdate);
         return true;
+    }
+
+    @Override
+    public Hatm getHatmById(Integer id) {
+        return hatmRepository.findById(id)
+                .orElseThrow(()-> new HatmNotFoundException("Hatm doesn't exits!!"));
+    }
+
+    @Override
+    public List<ReadingProgressDto> getAllReadingProgressById(Integer id) {
+        return readingProgressRepository.findAllByHatmId(id)
+                .stream()
+                .map(rp->mapper.readingProgressFromEntityToDto(rp))
+                .toList();
+    }
+
+    @Override
+    public List<HatmDto> getAllHatmDtoByUserId(Integer id) {
+        return hatmRepository.findAllByUserId(id)
+                .stream()
+                .map(hatm-> mapper.hatmFromEntityToDto(hatm))
+                .toList();
     }
 }

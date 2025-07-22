@@ -5,12 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 @Data
 public class ReadingProgressDto {
     private Integer id;
-    private LocalDate date;
+    private LocalDateTime dateTime;
     private Integer pageReadTo; // До какой страницы прочитал сегодня
-    private Hatm hatm;
+    private HatmDto hatm;
 }

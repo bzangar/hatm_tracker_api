@@ -1,7 +1,8 @@
-package com.hatm_tracker.service;
+package com.hatm_tracker.service.hatm_service;
 
 import com.hatm_tracker.model.dto.HatmDto;
-import org.hibernate.dialect.H2SqlAstTranslator;
+import com.hatm_tracker.model.dto.ReadingProgressDto;
+import com.hatm_tracker.model.entity.Hatm;
 
 import java.util.List;
 
@@ -11,9 +12,15 @@ public interface HatmService {
 
     List<HatmDto> getAllHatmDto();
 
+    List<HatmDto> getAllHatmDtoByUserId(Integer id);
+
     HatmDto getHatmDtoById(Integer id);
 
     HatmDto updateHatmById(Integer id, HatmDto hatmDto);
 
     boolean deleteHatmById(Integer id);
+
+    Hatm getHatmById(Integer id);
+
+    List<ReadingProgressDto> getAllReadingProgressById(Integer id);
 }

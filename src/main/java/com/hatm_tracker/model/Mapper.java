@@ -1,9 +1,11 @@
 package com.hatm_tracker.model;
 
 import com.hatm_tracker.model.dto.HatmDto;
+import com.hatm_tracker.model.dto.ReadingProgressDto;
 import com.hatm_tracker.model.dto.UserDto;
 import com.hatm_tracker.model.dto.UserReqDto;
 import com.hatm_tracker.model.entity.Hatm;
+import com.hatm_tracker.model.entity.ReadingProgress;
 import com.hatm_tracker.model.entity.User;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +35,15 @@ public class Mapper {
                 .startTime(hatm.getStartTime())
                 .endTime(hatm.getEndTime())
                 .hatmNumber(hatm.getHatmNumber())
+                .build();
+    }
+
+    public ReadingProgressDto readingProgressFromEntityToDto(ReadingProgress readingProgress){
+        return ReadingProgressDto.builder()
+                .id(readingProgress.getId())
+                .hatm(hatmFromEntityToDto(readingProgress.getHatm()))
+                .pageReadTo(readingProgress.getPageReadTo())
+                .dateTime(readingProgress.getDateTime())
                 .build();
     }
 }
