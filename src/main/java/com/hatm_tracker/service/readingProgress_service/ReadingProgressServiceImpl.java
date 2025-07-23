@@ -8,7 +8,11 @@ import com.hatm_tracker.model.entity.ReadingProgress;
 import com.hatm_tracker.repository.HatmRepository;
 import com.hatm_tracker.repository.ReadingProgressRepository;
 import com.hatm_tracker.service.hatm_service.HatmService;
+import com.hatm_tracker.util.HatmErrors;
+import com.hatm_tracker.util.HatmStatements;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,6 +27,8 @@ public class ReadingProgressServiceImpl implements ReadingProgressService{
     final private Mapper mapper;
     final private HatmService hatmService;
     final private HatmRepository hatmRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ReadingProgressServiceImpl.class.getName());
+    private static final int TOTAL_PAGES = HatmStatements.TOTAL_PAGES.getTotalPages();
 
     @Override
     public ReadingProgressDto createHatmReadingProgress(ReadingProgressDto readingProgressDto) {
@@ -38,25 +44,27 @@ public class ReadingProgressServiceImpl implements ReadingProgressService{
         Hatm currentHatm = readingProgress.getHatm();
         ReadingProgress lastAddedRP = readingProgressRepository.
                 findTopByHatmOrderByDateTimeDesc(currentHatm)
-                .orElseThrow(()->new ReadingProgressNotFoundException("Reading progress does not exists"));
+                .orElseThrow(()->new ReadingProgressNotFoundException(HatmErrors.READING_PROGRESS_NOT_FOUND.getMessage()));
 
         int lastPageReadTo = lastAddedRP.getPageReadTo();
 
-        if(lastPageReadTo >= 604){
+        if(lastPageReadTo >= TOTAL_PAGES){
             LocalDate today = LocalDate.now();
             currentHatm.setEnd(true);
             currentHatm.setEndTime(today);
             hatmRepository.save(currentHatm);
-            System.out.println("Current Hatm ID: " + currentHatm.getId());
-            System.out.println("Current Hatm id END?: " + currentHatm.isEnd());
+            logger.info("Current Hatm ID: " + currentHatm.getId());
+            logger.info("Current Hatm id END?: " + currentHatm.isEnd());
         }
 
-        System.out.println("Last added RP ID: " + lastAddedRP.getId());
+        logger.info("Last added RP ID: " + lastAddedRP.getId());
+
         return mapper.readingProgressFromEntityToDto(readingProgress);
     }
 
     @Override
     public List<ReadingProgressDto> getAllReadingProgressDto() {
+
         return readingProgressRepository.findAll().
                 stream()
                 .map(rp -> mapper.readingProgressFromEntityToDto(rp))
@@ -65,32 +73,38 @@ public class ReadingProgressServiceImpl implements ReadingProgressService{
 
     @Override
     public ReadingProgressDto getReadingProgressDtoById(Integer id) {
+
         return mapper.readingProgressFromEntityToDto(readingProgressRepository.findById(id)
                 .orElseThrow( ()->
-                        new ReadingProgressNotFoundException("Reading progress does not exits!!")));
+                        new ReadingProgressNotFoundException(HatmErrors.READING_PROGRESS_NOT_FOUND.getMessage())));
     }
 
     @Override
     public ReadingProgressDto updateReadingProgressById(Integer id, ReadingProgressDto readingProgressDto) {
         ReadingProgress readingProgress = readingProgressRepository.findById(id)
                 .orElseThrow( ()->
-                        new ReadingProgressNotFoundException("Reading progress does not exits!!"));
+                        new ReadingProgressNotFoundException(HatmErrors.READING_PROGRESS_NOT_FOUND.getMessage()));
 
         readingProgress.setPageReadTo(readingProgressDto.getPageReadTo());
         readingProgress.setHatm(hatmService.getHatmById(readingProgressDto.getHatm().getId()));
         readingProgressRepository.save(readingProgress);
+
         return mapper.readingProgressFromEntityToDto(readingProgress);
     }
 
     @Override
     public boolean deleteReadingProgressById(Integer id) {
+
         if(id == null){
-            throw new IllegalStateException("Id must not be null");
+            throw new IllegalStateException(HatmErrors.NULL_ID.getMessage());
         }
+
         if(!readingProgressRepository.existsById(id)){
-            throw new  ReadingProgressNotFoundException("Reading progress does not exits!!");
+            throw new  ReadingProgressNotFoundException(HatmErrors.READING_PROGRESS_NOT_FOUND.getMessage());
         }
+
         readingProgressRepository.deleteById(id);
+
         return true;
     }
 }

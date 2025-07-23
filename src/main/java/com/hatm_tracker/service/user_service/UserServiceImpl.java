@@ -8,6 +8,7 @@ import com.hatm_tracker.model.dto.UserReqDto;
 import com.hatm_tracker.model.entity.User;
 import com.hatm_tracker.repository.HatmRepository;
 import com.hatm_tracker.repository.UserRepository;
+import com.hatm_tracker.util.HatmErrors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +26,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserDtoById(Integer id) {
         User user =  userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found!!!"));
+                .orElseThrow(() -> new UserNotFoundException(HatmErrors.USER_NOT_FOUND.getMessage()));
 
         return mapper.userFromEntityToDto(user);
     }
 
     @Override
     public List<UserDto> getAllUserDto() {
+
         return userRepository.findAll()
                 .stream()
                 .map(user -> mapper.userFromEntityToDto(user))
@@ -41,6 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(User user) {
         userRepository.save(user);
+
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -50,20 +53,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean deleteUserById(Integer id) {
+
         if(id==null){
-            throw new IllegalStateException("Id must not be null");
+            throw new IllegalStateException(HatmErrors.NULL_ID.getMessage());
         }
+
         if(!userRepository.existsById(id)){
-            throw new UserNotFoundException("User doesn't exits!!");
+            throw new UserNotFoundException(HatmErrors.USER_NOT_FOUND.getMessage());
         }
+
         userRepository.deleteById(id);
+
         return true;
     }
 
     @Override
     public UserReqDto updateUserById(Integer id, UserReqDto userReqDto) {
         User user = userRepository.findById(id)
-                .orElseThrow(()->new UserNotFoundException("User doesn't exists!!!"));
+                .orElseThrow(()->new UserNotFoundException(HatmErrors.USER_NOT_FOUND.getMessage()));
         user.setName(userReqDto.getName());
         user.setUsername(userReqDto.getUsername());
         user.setPassword(user.getPassword());
@@ -74,12 +81,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Integer id) {
+
         return userRepository.findById(id)
-                .orElseThrow(()-> new UserNotFoundException("User doesn't exists"));
+                .orElseThrow(()-> new UserNotFoundException(HatmErrors.USER_NOT_FOUND.getMessage()));
     }
 
     @Override
     public List<HatmDto> getAllHatmDtoById(Integer id) {
+
         return hatmRepository.findAllByUserId(id)
                 .stream()
                 .map(hatm-> mapper.hatmFromEntityToDto(hatm))
