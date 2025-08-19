@@ -1,10 +1,8 @@
 package com.hatm_tracker.model.dto;
 
-import com.hatm_tracker.model.entity.Hatm;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder

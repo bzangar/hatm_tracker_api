@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Mapper {
     public UserDto userFromEntityToDto(User user){
+
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -20,6 +21,7 @@ public class Mapper {
     }
 
     public UserReqDto userFromEntityToDto_Req(User user){
+
         return UserReqDto.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -29,6 +31,7 @@ public class Mapper {
     }
 
     public HatmDto hatmFromEntityToDto(Hatm hatm){
+
         return HatmDto.builder()
                 .id(hatm.getId())
                 .name(hatm.getName())
@@ -39,6 +42,7 @@ public class Mapper {
     }
 
     public ReadingProgressDto readingProgressFromEntityToDto(ReadingProgress readingProgress){
+
         return ReadingProgressDto.builder()
                 .id(readingProgress.getId())
                 .hatm(hatmFromEntityToDto(readingProgress.getHatm()))

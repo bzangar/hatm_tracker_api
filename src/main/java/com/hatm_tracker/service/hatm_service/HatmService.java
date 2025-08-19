@@ -3,12 +3,13 @@ package com.hatm_tracker.service.hatm_service;
 import com.hatm_tracker.model.dto.HatmDto;
 import com.hatm_tracker.model.dto.ReadingProgressDto;
 import com.hatm_tracker.model.entity.Hatm;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
 public interface HatmService {
 
-    HatmDto createHatm(HatmDto hatmDto);
+    HatmDto createHatm(HatmDto hatmDto, UserDetails userDetails);
 
     List<HatmDto> getAllHatmDto();
 

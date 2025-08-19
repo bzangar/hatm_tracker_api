@@ -6,6 +6,7 @@ import com.hatm_tracker.model.Mapper;
 import com.hatm_tracker.model.dto.HatmDto;
 import com.hatm_tracker.model.dto.ReadingProgressDto;
 import com.hatm_tracker.model.entity.Hatm;
+import com.hatm_tracker.model.entity.User;
 import com.hatm_tracker.repository.HatmRepository;
 import com.hatm_tracker.repository.ReadingProgressRepository;
 import com.hatm_tracker.service.user_service.UserService;
@@ -13,6 +14,7 @@ import com.hatm_tracker.util.HatmErrors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -30,7 +32,7 @@ public class HatmServiceImpl implements HatmService{
     private static Logger logger = LoggerFactory.getLogger(HatmServiceImpl.class.getName());
 
     @Override
-    public HatmDto createHatm(HatmDto hatmDto) {
+    public HatmDto createHatm(HatmDto hatmDto, UserDetails userDetails) {
         int maxNumber = hatmRepository.countAllByOrderByHatmNumberAsc() + 1;
         LocalDate today = LocalDate.now();
 
@@ -46,12 +48,14 @@ public class HatmServiceImpl implements HatmService{
 
         }
 
+        User user = userService.getUserByUsername(userDetails.getUsername());
+
         Hatm hatm = Hatm.builder()
                 .hatmNumber(maxNumber)
                 .name(hatmDto.getName())
                 .startTime(today)
                 .endTime(null)
-                .user(userService.getUserById(hatmDto.getUser().getId()))
+                .user(user)
                 .build();
         hatmRepository.save(hatm);
 

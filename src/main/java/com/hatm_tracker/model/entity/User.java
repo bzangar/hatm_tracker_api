@@ -1,11 +1,8 @@
 package com.hatm_tracker.model.entity;
 
+import com.hatm_tracker.model.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 
 import java.util.List;
 
@@ -24,6 +21,9 @@ public class User {
     private String password;
 
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Hatm> hatms;

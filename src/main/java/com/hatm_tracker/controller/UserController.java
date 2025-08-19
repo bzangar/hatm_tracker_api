@@ -23,11 +23,13 @@ public class UserController {
     public UserDto getUserById(
             @PathVariable Integer id
     ){
+
         return userService.getUserDtoById(id);
     }
 
     @GetMapping()
     public List<UserDto> getAllUserDto(){
+
         return userService.getAllUserDto();
     }
 
@@ -35,6 +37,7 @@ public class UserController {
     public UserDto createUser(
             @RequestBody User user
     ){
+
         return userService.createUser(user);
     }
 
@@ -42,16 +45,19 @@ public class UserController {
     public UserReqDto deleteUserById(
             @PathVariable Integer id, @RequestBody UserReqDto userReqDto
             ){
+
         return userService.updateUserById(id, userReqDto);
     }
 
     @DeleteMapping("/{id}")
     public boolean deleteUserById(@PathVariable Integer id){
+
         return userService.deleteUserById(id);
     }
 
     @GetMapping("/{id}/all-hatms")
     public List<HatmDto> getAllHatmDtoById(@PathVariable Integer id){
+
         return userService.getAllHatmDtoById(id);
     }
 }
