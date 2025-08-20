@@ -1,6 +1,7 @@
 package com.hatm_tracker.service.user_service;
 
 import com.hatm_tracker.model.dto.HatmDto;
+import com.hatm_tracker.model.dto.RegisterUserDto;
 import com.hatm_tracker.model.dto.UserDto;
 import com.hatm_tracker.model.dto.UserReqDto;
 import com.hatm_tracker.model.entity.User;
@@ -10,20 +11,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-    UserDto getUserDtoById(Integer id);
+    RegisterUserDto getUserDto(UserDetails userDetails);
 
-    List<UserDto> getAllUserDto();
+    RegisterUserDto deleteUser(UserDetails userDetails);
 
-    UserDto createUser(User user);
-
-    boolean deleteUserById(Integer id);
-
-    UserReqDto updateUserById(Integer id, UserReqDto userResDto);
-
-    User getUserById(Integer id);
-
-    List<HatmDto> getAllHatmDtoById(Integer id);
-
+    RegisterUserDto updateUser(UserDetails userDetails, UserReqDto userResDto);
 
     User getUserByUsername(String username);
 }

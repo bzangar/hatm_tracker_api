@@ -2,8 +2,7 @@ package com.hatm_tracker.service.user_service;
 
 import com.hatm_tracker.exception.UserNotFoundException;
 import com.hatm_tracker.model.Mapper;
-import com.hatm_tracker.model.dto.HatmDto;
-import com.hatm_tracker.model.dto.UserDto;
+import com.hatm_tracker.model.dto.RegisterUserDto;
 import com.hatm_tracker.model.dto.UserReqDto;
 import com.hatm_tracker.model.entity.User;
 import com.hatm_tracker.repository.HatmRepository;
@@ -13,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,76 +28,52 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDto getUserDtoById(Integer id) {
-        User user =  userRepository.findById(id)
+    public RegisterUserDto getUserDto(UserDetails userDetails) {
+        User user =  userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new UserNotFoundException(HatmErrors.USER_NOT_FOUND.getMessage()));
 
-        return mapper.userFromEntityToDto(user);
-    }
-
-    @Override
-    public List<UserDto> getAllUserDto() {
-
-        return userRepository.findAll()
-                .stream()
-                .map(user -> mapper.userFromEntityToDto(user))
-                .toList();
-    }
-
-    @Override
-    public UserDto createUser(User user) {
-        userRepository.save(user);
-
-        return UserDto.builder()
-                .id(user.getId())
+        RegisterUserDto result = RegisterUserDto.builder()
                 .name(user.getName())
                 .username(user.getUsername())
+                .password(user.getPassword())
                 .build();
+
+        return result;
+    }
+
+
+    @Override
+    public RegisterUserDto deleteUser(UserDetails userDetails) {
+        User user = getUserByUsername(userDetails.getUsername());
+        RegisterUserDto result = RegisterUserDto.builder()
+                .name(user.getName())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .build();
+
+        userRepository.delete(user);
+
+        return result;
     }
 
     @Override
-    public boolean deleteUserById(Integer id) {
+    public RegisterUserDto updateUser(UserDetails userDetails, UserReqDto userReqDto) {
+        PasswordEncoder passwordEncoder = passwordEncoder();
 
-        if(id==null){
-            throw new IllegalStateException(HatmErrors.NULL_ID.getMessage());
-        }
-
-        if(!userRepository.existsById(id)){
-            throw new UserNotFoundException(HatmErrors.USER_NOT_FOUND.getMessage());
-        }
-
-        userRepository.deleteById(id);
-
-        return true;
-    }
-
-    @Override
-    public UserReqDto updateUserById(Integer id, UserReqDto userReqDto) {
-        User user = userRepository.findById(id)
+        User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(()->new UserNotFoundException(HatmErrors.USER_NOT_FOUND.getMessage()));
         user.setName(userReqDto.getName());
         user.setUsername(userReqDto.getUsername());
-        user.setPassword(user.getPassword());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
 
-        return mapper.userFromEntityToDto_Req(user);
+        return RegisterUserDto.builder()
+                .name(user.getName())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .build();
     }
 
-    @Override
-    public User getUserById(Integer id) {
-
-        return userRepository.findById(id)
-                .orElseThrow(()-> new UserNotFoundException(HatmErrors.USER_NOT_FOUND.getMessage()));
-    }
-
-    @Override
-    public List<HatmDto> getAllHatmDtoById(Integer id) {
-
-        return hatmRepository.findAllByUserId(id)
-                .stream()
-                .map(hatm-> mapper.hatmFromEntityToDto(hatm))
-                .toList();
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -113,5 +90,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
+
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

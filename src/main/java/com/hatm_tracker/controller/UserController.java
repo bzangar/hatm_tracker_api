@@ -2,62 +2,45 @@ package com.hatm_tracker.controller;
 
 
 import com.hatm_tracker.model.dto.HatmDto;
+import com.hatm_tracker.model.dto.RegisterUserDto;
 import com.hatm_tracker.model.dto.UserDto;
 import com.hatm_tracker.model.dto.UserReqDto;
-import com.hatm_tracker.model.entity.User;
 import com.hatm_tracker.service.user_service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/hatm-tracker/users")
+@RequestMapping("/api/hatm-tracker/users/me")
 @RequiredArgsConstructor
 public class UserController {
 
     final private UserService userService;
 
-    @GetMapping("/{id}")
-    public UserDto getUserById(
-            @PathVariable Integer id
-    ){
-
-        return userService.getUserDtoById(id);
-    }
-
     @GetMapping()
-    public List<UserDto> getAllUserDto(){
-
-        return userService.getAllUserDto();
-    }
-
-    @PostMapping()
-    public UserDto createUser(
-            @RequestBody User user
+    public RegisterUserDto getUserById(
+            @AuthenticationPrincipal UserDetails userDetails
     ){
 
-        return userService.createUser(user);
+        return userService.getUserDto(userDetails);
     }
 
-    @PutMapping("/{id}")
-    public UserReqDto deleteUserById(
-            @PathVariable Integer id, @RequestBody UserReqDto userReqDto
+    @PutMapping()
+    public RegisterUserDto deleteUserById(
+            @AuthenticationPrincipal UserDetails userDetails, @RequestBody UserReqDto userReqDto
             ){
 
-        return userService.updateUserById(id, userReqDto);
+        return userService.updateUser(userDetails, userReqDto);
     }
 
-    @DeleteMapping("/{id}")
-    public boolean deleteUserById(@PathVariable Integer id){
+    @DeleteMapping()
+    public RegisterUserDto deleteUserById(@AuthenticationPrincipal UserDetails userDetails){
 
-        return userService.deleteUserById(id);
+        return userService.deleteUser(userDetails);
     }
 
-    @GetMapping("/{id}/all-hatms")
-    public List<HatmDto> getAllHatmDtoById(@PathVariable Integer id){
-
-        return userService.getAllHatmDtoById(id);
-    }
 }

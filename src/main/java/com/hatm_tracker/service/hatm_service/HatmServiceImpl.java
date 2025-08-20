@@ -37,7 +37,7 @@ public class HatmServiceImpl implements HatmService{
         LocalDate today = LocalDate.now();
 
         if(!getAllHatmDtoByUserId(hatmDto.getUser().getId()).isEmpty()){
-            Hatm latestHatm = hatmRepository.findTopByUserOrderByHatmNumberDesc(userService.getUserById(hatmDto.getUser().getId()))
+            Hatm latestHatm = hatmRepository.findTopByUserOrderByHatmNumberDesc(userService.getUserByUsername(userDetails.getUsername()))
                     .orElseThrow(()-> new HatmNotFoundException(HatmErrors.HATM_NOT_FOUND.getMessage()));
 
             logger.info("Previous Hatm ID: " + latestHatm.getId());
